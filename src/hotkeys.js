@@ -609,9 +609,39 @@
     };
   })
 
-  .run(function(hotkeys) {
+  .run(function(hotkeys, $injector) {
     // force hotkeys to run by injecting it. Without this, hotkeys only runs
     // when a controller or something else asks for it via DI.
+
+    // allow 'hotkey' attribute for ui-router states.
+    try {
+      // execute only if $state can be injected
+      $injector.invoke(function ($state, $q) {
+        function addHotkey(state, hotkey) {
+          if (!angular.isObject(hotkey)) {
+            hotkey = { combo: hotkey };
+          }
+          hotkey.callback = function () {
+            $state.go(state.name);
+          };
+          hotkeys.add(hotkey);
+        }
+
+        angular.forEach($state.get(), function(state) {
+          if (state.hotkey) {
+            if (angular.isFunction(state.hotkey)) {
+              $q.when($injector.invoke(state.hotkey)).then(function (hotkeyObject) {
+                addHotkey(state, hotkeyObject);
+              });
+            } else {
+              addHotkey(state, state.hotkey);
+            }
+          }
+        });
+      });
+    } catch(ignored) {
+      // ui-router seems to be absent
+    }
   });
 
 })();
