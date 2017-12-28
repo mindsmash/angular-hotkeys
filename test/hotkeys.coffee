@@ -323,19 +323,6 @@ describe 'Angular Hotkeys', ->
     expect(hotkeys.get('b')).toBe false
     expect(hotkeys.get('c')).toBe false
 
-  it 'should support pause/unpause for temporary disabling of hotkeys', ->
-    executed = false
-
-    hotkeys.add 'w', ->
-      executed = true
-
-    hotkeys.pause()
-    KeyEvent.simulate('w'.charCodeAt(0), 90)
-    expect(executed).toBe false
-    hotkeys.unpause()
-    KeyEvent.simulate('w'.charCodeAt(0), 90)
-    expect(executed).toBe true
-
 
   describe 'misc regression tests', ->
 
@@ -444,7 +431,7 @@ describe 'Angular Hotkeys', ->
 
 describe 'hotkey directive', ->
 
-  elSimple = elAllowIn = elMultiple = scope = hotkeys = $compile = $document = executedSimple = executedAllowIn = null
+  elSimple = elAllowIn = scope = hotkeys = $compile = $document = executedSimple = executedAllowIn = null
 
   beforeEach ->
     module('cfp.hotkeys')
@@ -460,10 +447,8 @@ describe 'hotkey directive', ->
         executedSimple = yes
       scope.callmeAllowIn = () ->
         executedAllowIn = yes
-      scope.callmeMultiple = () ->
       elSimple = $compile('<div hotkey="{e: callmeSimple}" hotkey-description="testing simple case"></div>')(scope)
       elAllowIn = $compile('<div hotkey="{w: callmeAllowIn}" hotkey-description="testing with allowIn" hotkey-allow-in="INPUT, TEXTAREA"></div>')(scope)
-      elMultiple = $compile('<div hotkey="{a: callmeMultiple, b: callmeMultiple}" hotkey-description="testing with multiple hotkeys"></div>')(scope)
       scope.$digest()
 
   it 'should allow hotkey binding via directive', ->
@@ -490,15 +475,10 @@ describe 'hotkey directive', ->
   it 'should unbind the hotkey when the directive is destroyed', ->
     expect(hotkeys.get('e').combo).toEqual ['e']
     expect(hotkeys.get('w').combo).toEqual ['w']
-    expect(hotkeys.get('a').combo).toEqual ['a']
-    expect(hotkeys.get('b').combo).toEqual ['b']
     elSimple.remove()
     elAllowIn.remove()
-    elMultiple.remove()
     expect(hotkeys.get('e')).toBe no
     expect(hotkeys.get('w')).toBe no
-    expect(hotkeys.get('a')).toBe no
-    expect(hotkeys.get('b')).toBe no
 
 
 describe 'Platform specific things', ->
@@ -601,3 +581,5 @@ describe 'Configuration options', ->
     module 'cfp.hotkeys'
     inject (hotkeys) ->
       expect(hotkeys.useNgRoute).toBe true
+
+
