@@ -130,23 +130,6 @@ angular.module('myApp').config(function ($routeProvider) {
 });
 ```
 
-#### Binding hotkeys to states:
-You can also define a hotkey to be bound to a specific ui-router state.
-
-```js
-angular.module('myApp').config(function ($stateProvider) {
-  $stateProvider.state('myState', {
-    url: '/',
-    controller: 'RestaurantsController',
-    templateUrl: 'views/restaurants.html',
-    hotkey: {
-        combo: 'r',
-        description: 'View all restaurants'
-    }
-  });
-});
-```
-
 #### Binding hotkeys in directives:
 Lastly, even though binding hotkeys in your templates/html tends to be a bad idea, it can be super useful for simple shortcuts.  Think along the lines of a modal directive where you simply want to bind to the escape key or something equally simple.  Accomplishing this within a controller is too much overhead, and it may lead to code-reuse.
 
