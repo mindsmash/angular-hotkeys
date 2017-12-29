@@ -1,4 +1,6 @@
-angular-hotkeys
+Forked version of angular-hotkeys
+Fixed the "Uncaught TypeError: Cannot read property 'type' of undefined" error
+Do not update this version via grunt build without modify the mousetrap.js within the bower_components.
 ================
 Configuration-centric keyboard shortcuts for your Angular apps.
 
